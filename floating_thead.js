@@ -58,8 +58,9 @@ function floating_thead_onscroll(ev,data) {
 				clone.style.width=data.$thead_children[i].offsetWidth+'px'
 			})
 		}
-		if (data.$thead_clone.css('marginLeft')!=-data.$scrollParent.scrollLeft())
-			data.$thead_clone.css('marginLeft',-data.$scrollParent.scrollLeft())
+		if (data.$scrollParent[0].offsetWidth<data.$scrollParent[0].scrollWidth) // has h-scrolling
+			if (data.$thead_clone.css('marginLeft')!=-data.$scrollParent.scrollLeft())
+				data.$thead_clone.css('marginLeft',-data.$scrollParent.scrollLeft())
 	}else{
 		data.$thead_clone.hide()
 		data.$thead.data('runonce',0)
