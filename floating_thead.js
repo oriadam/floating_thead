@@ -1,9 +1,11 @@
+floating_thead_data=[]
+
 function floating_thead_init() {
-	$('thead').each(function(){
+	jQuery('thead').each(function(){
 		// init
 		var data={}
 		var thead=this
-		var $thead=$(thead)
+		var $thead=jQuery(thead)
 		var $table=$thead.closest('table')
 		if (!$table.length)	return
 		if (!$table.scrollParent){
@@ -13,7 +15,7 @@ function floating_thead_init() {
 		var $scrollParentForEvent=$table.scrollParent()
 		var $scrollParent=$scrollParentForEvent
 		if (!$scrollParentForEvent[0].style) // if scrollParent is window.document use <body> instead
-			$scrollParent=$('body')
+			$scrollParent=jQuery('body')
 
 		// runonce
 		if ($scrollParent.data('floating_thead_runonce'))
@@ -30,9 +32,11 @@ function floating_thead_init() {
 		data.$thead=$thead
 		data.$table=$table
 		data.$scrollParent=$scrollParent
+		floating_thead_data.push(data)
 
 		// attach event
 		$scrollParentForEvent.on('scroll',function(ev){
+			//console.log('floating_thead attach scroll',data)
 			floating_thead_onscroll(ev,data)
 		})
 	})
@@ -42,19 +46,27 @@ function floating_thead_onscroll(ev,data) {
 	var scrollTop = data.$scrollParent.scrollTop()
 	var thead_clone_top = data.$scrollParent.offset().top
 	var floatingIsNeeded=scrollTop > 0
+	floating_thead_last_data=data
+	//console.log('floating_thead_onscroll',floatingIsNeeded,ev,data)
 
 	if (floatingIsNeeded) {
 		data.$thead_clone.css("top",thead_clone_top).show();
 		if (!data.$thead.data('runonce')){
 			data.$thead.data('runonce',1)
+			data.$thead_clone.width(data.$thead.width())
 			data.$thead_clone_children.each(function(i,clone){
 				clone.style.width=data.$thead_children[i].offsetWidth+'px'
 			})
 		}
+		if (data.$scrollParent.scrollLeft())
+			if (data.$thead_clone.css('marginLeft')!=-data.$scrollParent.scrollLeft())
+				data.$thead_clone.css('marginLeft',-data.$scrollParent.scrollLeft())
 	}else{
 		data.$thead_clone.hide()
+		data.$thead.data('runonce',0)
 	}
 }
 
-$(document).ready(floating_thead_init);
+// run on load
+jQuery(floating_thead_init);
 
