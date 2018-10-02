@@ -1,15 +1,27 @@
 # floating_thead
-Keep tables header floating on screen while scrolling down the table.
+Keep table head floating on screen while scrolling down the table.
 
-Keywords: html jquery jqueryui javascript tables thead
+Keywords: html jquery jqueryui javascript tables float thead sticky header
 
-To Setup:
- 1. Add a proper thead tag to your table (only single thead is supported)
- 2. Add jquery and jqueryui scripts
- 3. Add the floating_thead.js script
+Usage:
 
-Tech Notes:
- * The <thead> would be cloned to a new thead and added to the table.
- * The cloned <thead> has the class <code>floating_thead_pinned</code> and position:fixed.
- * The cloned <thead> would only appear when table is scrolled.
- * Scrolling element is detected using jQueryUI scrollParent() function.
+    jQuery('table').floating_thead();
+
+Advanced:
+
+    jQuery('table').floating_thead({
+        scrollParent: jQuery('body'), // this line is mandatory when jQueryUI is missing
+        on_scroll: function (floatingIsNeeded, $table, $thead)
+        {
+            $thead.css('top', 59);
+        }
+    });
+    
+    // update table sizes
+    jQuery('table').trigger('floating_thead_refresh');
+
+Notes:
+ * Nothing is cloned, only css is changed
+ * When thead is fixed the table will have class `floating_thead_on`
+ * Window resize will trigger recalculation of column widths
+ * Scrolling element is detected using jQueryUI `.scrollParent()`. If jQueryUI is absent you must pass `scrollParent` in `options`
