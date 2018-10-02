@@ -1,3 +1,4 @@
+// https://github.com/oriadam/floating_thead v2.0
 jQuery.fn.floating_thead = function (options)
 {
 	this.each(function ()
