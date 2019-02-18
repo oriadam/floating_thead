@@ -24,6 +24,7 @@ jQuery.fn.floating_thead = function (options)
 		var $scrollParent = $scrollParentForEvent;
 		if ($scrollParentForEvent && !$scrollParentForEvent[0].style) // if scrollParent is window.document use <body> instead
 			$scrollParent = jQuery('body');
+		var $space_filler = $('<tr></tr>');
 
 		function reset()
 		{
@@ -33,7 +34,7 @@ jQuery.fn.floating_thead = function (options)
 			$thead.css({position: '', top: '', left: ''});
 			$table.css('width', '').find('th,td').css('width', '');
 			$table.offsetTop; // statement to make sure calling page repaint
-			$table.width($table.width() - (options.fixed ? 0  : 0));
+			$table.width($table.width()-1);
 			$thead.width($table.width());
 			$table.find('> thead > tr > th,> tbody > tr:first > td').each(function ()
 			{
@@ -43,14 +44,18 @@ jQuery.fn.floating_thead = function (options)
 				position: options.fixed ? 'fixed' : 'absolute',
 				'z-index': +$thead.css('z-index') || 1
 			});
-			if (options.on_reset) options.on_reset($table, $thead);
+			if (options.on_reset)
+				options.on_reset($table, $thead);
 			on_scroll();
+			if (options.fixed)
+				$tbody.css('transform', 'translate(0,' + $thead.outerHeight(true) + 'px)');
+			else
+				$tbody.prepend($space_filler.css('height', $thead.outerHeight(true) + 'px'));
 		}
 
 		function on_scroll()
 		{
 			options.on_before_scroll && options.on_before_scroll($table, $thead);
-			$tbody.css('transform', 'translate(0,' + $thead.outerHeight(true) + 'px)');
 			if (options.fixed)
 				$thead.css({
 					top: Math.max(0, $table[0].getBoundingClientRect().top),
@@ -58,12 +63,12 @@ jQuery.fn.floating_thead = function (options)
 				});
 			else
 			{
+				if ($scrollParent.css('position') === 'static')
+					$scrollParent.css('position', 'relative');
 				$thead.css({
 					top: Math.max(0, $table[0].offsetTop) + $scrollParent[0].scrollTop,
 					left: $table[0].offsetLeft
 				});
-				if ($scrollParent.css('position') === 'static')
-					$scrollParent.css('position', 'relative');
 			}
 			options.on_scroll && options.on_scroll($table, $thead);
 		}
