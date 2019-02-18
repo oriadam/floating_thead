@@ -3,7 +3,8 @@
  * Make thead sticky for a table
  * To trigger recalc call scrollParent.trigger('scroll')
  * @param options object {
- * 		fixed: true/false: use 'fixed' or 'absolute' ?
+ * 		fixed: true/false: use 'fixed' or 'absolute'
+ * 		transform: true/false: use 'transform' to lower the tbody or add a ghost tr to do it
  *		scrollParent: element that has the scroll. default = $table.scrollParnet()
  *		on_scroll: function($table, $thead); what to do after scroll was called
  *		on_before_scroll: function($table, $thead); what to do before running on_scroll logic
@@ -30,7 +31,8 @@ jQuery.fn.floating_thead = function (options)
 		{
 			$thead = $table.find('> thead');
 			$tbody = $table.find('> tbody,> tfoot');
-			$tbody.css('transform', '');
+			if (options.transform)
+				$tbody.css('transform', '');
 			$thead.css({position: '', top: '', left: ''});
 			$table.css('width', '').find('th,td').css('width', '');
 			$table.offsetTop; // statement to make sure calling page repaint
@@ -47,7 +49,7 @@ jQuery.fn.floating_thead = function (options)
 			if (options.on_reset)
 				options.on_reset($table, $thead);
 			on_scroll();
-			if (options.fixed)
+			if (options.transform)
 				$tbody.css('transform', 'translate(0,' + $thead.outerHeight(true) + 'px)');
 			else
 				$tbody.prepend($space_filler.css('height', $thead.outerHeight(true) + 'px'));
