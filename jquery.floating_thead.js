@@ -6,7 +6,7 @@
  * 		fixed: true/false: use 'fixed' or 'absolute'
  * 		transform: true/false: use 'transform' to lower the tbody or add a ghost tr to do it
  *		scrollParent: element that has the scroll. default = $table.scrollParnet()
- *		on_scroll: function($table, $thead); what to do after scroll was called
+ *		on_scroll: function($table, $thead, $scrollParent); what to do after scroll was called
  *		on_before_scroll: function($table, $thead); what to do before running on_scroll logic
  *		on_reset: function($table, $thead); what to do after resetting all widths
  * }
@@ -72,7 +72,7 @@ jQuery.fn.floating_thead = function (options)
 					left: $table[0].offsetLeft
 				});
 			}
-			options.on_scroll && options.on_scroll($table, $thead);
+			options.on_scroll && options.on_scroll($table, $thead, $scrollParent);
 		}
 
 		jQuery(window).on('resize', reset);
