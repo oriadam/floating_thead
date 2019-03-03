@@ -1,7 +1,7 @@
 # floating_thead
-Keep table head floating on screen while scrolling down the table.
-
-Keywords: html jquery jqueryui javascript tables float thead sticky header
+jQuery plugin to keep table header row on screen while scrolling down the table.
+A `position:sticky` alternative/fallback.
+jQueryUI is optional, will be used to get the scrollParent.
 
 Usage:
 
@@ -11,9 +11,9 @@ Advanced:
 
     jQuery('table').floating_thead({
         scrollParent: jQuery('body'), // this line is mandatory when jQueryUI is missing
-        on_scroll: function (floatingIsNeeded, $table, $thead)
+        on_scroll: function ($table, $thead, $scrollParent)
         {
-            $thead.css('top', 59);
+            $thead.css('margin-top', $scrollParent[0].scrollTop ? 60 : 0);
         }
     });
     
